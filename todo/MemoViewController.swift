@@ -22,10 +22,10 @@ class MemoViewController: UIViewController, UITextFieldDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        nameTextField.text = saveData.string(forKey: "myText"+memoNo)
+        //nameTextField.text = saveData.string(forKey: "myText"+memoNo)
 //        titleTextField.text = saveData.object(forKey: "title") as? String
 //        contentTextView.text = saveData.object(forKey: "content")as? String
-        nameTextField.delegate = self
+        //nameTextField.delegate = self
         
         
         // Do any additional setup after loading the view.
