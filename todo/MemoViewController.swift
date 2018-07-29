@@ -8,16 +8,15 @@
 
 import UIKit
 import RealmSwift
+import UserNotifications
 
 class MemoViewController: UIViewController, UITextFieldDelegate {
     
     @IBOutlet var nameTextField: UITextField!
     @IBOutlet var birthmonthTextField: UITextField!
     @IBOutlet var birthdayTextField: UITextField!
+    let realm = try! Realm()
 
-    
-    var memoNo = ""
-    var saveData:UserDefaults = UserDefaults.standard
     
     
     override func viewDidLoad() {
@@ -43,19 +42,28 @@ class MemoViewController: UIViewController, UITextFieldDelegate {
         
         // textFieldに入力したデータをnewTodoのtitleに代入
         birthdaytable.name = nameTextField.text!
+        birthdaytable.month = Int(birthmonthTextField.text!)!
+        birthdaytable.day = Int(birthdayTextField.text!)!
+        
+        try! realm.write() {
+            realm.add(birthdaytable)
+        }
+        print(birthdaytable)
+//        birthdaytable.title = nameTextField.text!
+        
         
         // 上記で代入したテキストデータを永続化するための処理
-        do{
-            let realm = try Realm()
-            try realm.write({ () -> Void in
-                realm.add(birthdaytable)
-                print("ToDo Saved")
-            })
-        }catch{
-            print("Save is Faild")
-        }
-        self.navigationController?.popToRootViewController(animated: true)
-        }
+//        do{
+//            let realm = try Realm()
+//            try realm.write({ () -> Void in
+//                realm.add(birthdaytable)
+//                print("ToDo Saved")
+//            })
+//        }catch{
+//            print("Save is Faild")
+//        }
+      self.navigationController?.popToRootViewController(animated: true)
+//        }
     }
 
     /*
@@ -67,4 +75,6 @@ class MemoViewController: UIViewController, UITextFieldDelegate {
         // Pass the selected object to the new view controller.
     }
     */
+
+}
 

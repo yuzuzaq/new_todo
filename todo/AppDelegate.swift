@@ -9,6 +9,7 @@
 import UIKit
 import CoreData
 import RealmSwift
+import UserNotifications
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -18,6 +19,61 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
+        if #available(iOS 10.0, *) {
+            // iOS 10
+            let center = UNUserNotificationCenter.current()
+            center.requestAuthorization(options: [.badge, .sound, .alert], completionHandler: { (granted, error) in
+                if error != nil {
+                    return
+                }
+                
+                if granted {
+                    print("通知許可")
+                    
+                    let center = UNUserNotificationCenter.current()
+                    center.delegate = self as? UNUserNotificationCenterDelegate
+                    
+                } else {
+                    print("通知拒否")
+                }
+            })
+            
+        } else {
+            // iOS 9以下
+            let settings = UIUserNotificationSettings(types: [.badge, .sound, .alert], categories: nil)
+            UIApplication.shared.registerUserNotificationSettings(settings)
+        }
+        var notificationTime = DateComponents()
+        var trigger: UNNotificationTrigger
+        
+        let realm = try! Realm()
+        if realm.objects(Birthday.self) != nil{
+            print("最初に\(realm.objects(Birthday.self)))")
+        }
+        
+        
+        // 12時に通知する場合
+        notificationTime.hour = 14
+        notificationTime.minute = 55
+        trigger = UNCalendarNotificationTrigger(dateMatching: notificationTime, repeats: false)
+        
+        /*その他の設定*/
+        
+        // 設定したタイミングを起点として1分後に通知したい場合
+        trigger = UNTimeIntervalNotificationTrigger(timeInterval: 60, repeats: false)
+        
+        let content = UNMutableNotificationContent()
+        
+        // 通知のメッセージセット
+        content.title = ""
+        content.body = "食事の時間になりました！"
+        content.sound = UNNotificationSound.default()
+        
+        let request = UNNotificationRequest(identifier: "uuid", content: content, trigger: trigger)
+        
+        // 通知をセット
+        UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
+        
         return true
     }
 
@@ -27,6 +83,28 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     func applicationDidEnterBackground(_ application: UIApplication) {
+        //　通知設定に必要なクラスをインスタンス化
+//        let trigger: UNNotificationTrigger
+//        let content = UNMutableNotificationContent()
+//        var notificationTime = DateComponents()
+//        
+//        // トリガー設定
+//        
+//        notificationTime.hour = 14
+//        notificationTime.minute = 50
+//        trigger = UNCalendarNotificationTrigger(dateMatching: notificationTime, repeats: false)
+//        
+//        // 通知内容の設定
+//        content.title = ""
+//        content.body = "食事の時間になりました！"
+//        content.sound = UNNotificationSound.default()
+//        
+//        // 通知スタイルを指定
+//        let request = UNNotificationRequest(identifier: "uuid", content: content, trigger: trigger)
+//        // 通知をセット
+//        UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
+
+
         // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
         // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
     }
