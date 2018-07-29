@@ -56,7 +56,7 @@
                         </barButtonItem>
                     </navigationItem>
                     <connections>
-                        <outlet property="table" destination="LQc-C6-yww" id="fVT-eE-DVA"/>
+                        <outlet property="mainTable" destination="LQc-C6-yww" id="aGL-bb-8j9"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
