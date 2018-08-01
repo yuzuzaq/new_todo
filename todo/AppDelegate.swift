@@ -43,6 +43,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             let settings = UIUserNotificationSettings(types: [.badge, .sound, .alert], categories: nil)
             UIApplication.shared.registerUserNotificationSettings(settings)
         }
+        
+        for i in Birthday.self {
+            print(i.name)
+            var name = i.name
+            var month  = i.month
+            var day = i.day
+            notificationTime.month = i.month
+            notificationTime.date = i.day
+            trigger = UNCalendarNotificationTrigger(dateMatching: notificationTime, repeats: true)
+        }
+        
         var notificationTime = DateComponents()
         var trigger: UNNotificationTrigger
         
